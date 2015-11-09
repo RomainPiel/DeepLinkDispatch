@@ -27,11 +27,11 @@ public class DeepLinkActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Loader loader = new com.airbnb.deeplinkdispatch.DeepLinkLoader();
-    DeepLinkRegistry registry = new DeepLinkRegistry(loader);
+    DeepLinkLoader loader = new DeepLinkLoader();
+    loader.load();
     Uri uri = getIntent().getData();
     String uriString = uri.toString();
-    DeepLinkEntry entry = registry.parseUri(uriString);
+    DeepLinkEntry entry = loader.parseUri(uriString);
     if (entry != null) {
       Map<String, String> parameterMap = entry.getParameters(uriString);
       for (String queryParameter : uri.getQueryParameterNames()) {
@@ -73,7 +73,7 @@ public class DeepLinkActivity extends Activity {
         notifyListener(true, uri, "Deep link to non-existent method: " + entry.getMethod());
       } catch (IllegalAccessException exception) {
         notifyListener(true, uri, "Could not deep link to method: " + entry.getMethod());
-      } catch(InvocationTargetException  exception) {
+      } catch (InvocationTargetException  exception) {
         notifyListener(true, uri, "Could not deep link to method: " + entry.getMethod());
       } finally {
         finish();
@@ -95,4 +95,3 @@ public class DeepLinkActivity extends Activity {
     LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
   }
 }
-
